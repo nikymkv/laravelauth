@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
-        echo '3';
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 if ($guard == 'admin') {

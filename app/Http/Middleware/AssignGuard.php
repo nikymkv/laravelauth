@@ -18,7 +18,7 @@ class AssignGuard
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
-        echo '1';
+        
         foreach ($guards as $guard) {
             if (!Auth::guard($guard)->check()) {
                 if ($guard == 'admin') {
