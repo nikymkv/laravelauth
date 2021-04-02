@@ -14,9 +14,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.home', [
-
-            'logoutRoute' => 'admin.logout',
-        ]);
+        return view('admin.home');
     }
 }

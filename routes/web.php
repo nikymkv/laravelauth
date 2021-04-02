@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +21,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware(['assign.guard:web'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group([
+        'middleware' => ['assign.guard:web'],
+    ],
+    function () {
+        Route::get('/home', [HomeController::class , 'index'])->name('home');
+        Route::resource('posts', PostController::class);
 });
 
 
-Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
+Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')->group(function() {
     Route::namespace('Auth')->group(function(){
         
         //Login Routes
@@ -39,11 +45,12 @@ Route::prefix('/admin')->name('admin.')->namespace('Admin')->group(function() {
         //Reset Password Routes
         Route::get('/password/reset/{token}', [\App\Http\Controllers\Admin\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('/password/reset', [\App\Http\Controllers\Admin\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
-        
+
+        // Route::post('posts/import', [PostController::class, 'import'])->name('posts.import');
+        // Route::get('posts/{post}/export', [PostController::class, 'export'])->name('posts.export');
     });
 
     Route::middleware(['assign.guard:admin'])->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
-
     });
 });
