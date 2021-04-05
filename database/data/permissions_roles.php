@@ -11,11 +11,18 @@ return [
             'import',
             'export',
         ],
-    ],
-    'user' => [
-        'App\\Models\\Post' => [
-            // 'view',
+        'App\\Models\\Admin' => [
+            'view',
             'view-any',
+            'create',
+            'update',
+            'delete',
         ],
+    ],
+    'manager' => [
+
+    ],
+    'support' => [
+
     ],
 ];

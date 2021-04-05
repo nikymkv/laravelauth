@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
+    protected $guard_name = 'admin';
     /**
      * Run the database seeds.
      *
@@ -20,8 +21,8 @@ class UserSeeder extends Seeder
             'password' => \Hash::make('0000') , // password
             'remember_token' => \Str::random(10),
         ]);
-
-        $user->assignRole('admin');
+        
+        $user->assignRole('user');
 
         $users = \App\Models\User::factory()->count(5)->create();
         foreach ($users as $user) {

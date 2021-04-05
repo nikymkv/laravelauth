@@ -52,5 +52,11 @@ Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')
 
     Route::middleware(['assign.guard:admin'])->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+
+        /**
+         * Users routes
+         */
+        Route::get('/admins', [\App\Http\Controllers\Admin\ManageAdminController::class, 'index'])->name('admins');
+        Route::get('/admins/{admin}', [\App\Http\Controllers\Admin\ManageAdminController::class, 'show'])->name('admins.show');
     });
 });

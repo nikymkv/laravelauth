@@ -28,10 +28,10 @@ class PermissionsSeeder extends Seeder
 
     private function seedsRoles() : void
     {
-        Role::create(['name' => 'super-admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'super-admin', 'guard_name' => 'admin']);
 
         foreach ($this->data as $roleName => $perms) {
-            $role = Role::create(['name' => $roleName, 'guard_name' => 'web']);
+            $role = Role::create(['name' => $roleName, 'guard_name' => 'admin']);
             $this->seedRolePermissions($role, $perms);
         }
     }
@@ -43,7 +43,7 @@ class PermissionsSeeder extends Seeder
                 ->crossJoin($model)
                 ->map(function ($item) use ($role){
                     $perm = implode('-', $item);
-                    Permission::findOrCreate($perm, 'web');
+                    Permission::findOrCreate($perm, 'admin');
 
                     return $perm;
                 })->toArray();
