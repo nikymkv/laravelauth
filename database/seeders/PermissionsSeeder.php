@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class PermissionsSeeder extends Seeder
 {
@@ -17,38 +17,32 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        $this->loadData();
-        $this->seedsRoles();
+        $permissions = [
+            'admin' => [
+                'admin-list',
+                'admin-create',
+                'admin-edit',
+                'admin-delete',
+            ],
+            'subadmin' => [
+                'admin-list',
+            ]
+         ];
+
+         foreach($permissions as $role => $permission) {
+            $role = Role::create([
+                'name' => $role,
+                'guard_name' => 'admin',
+            ]);
+            $this->seedRolePermissions($role, $permission);
+         }
     }
 
-    private function loadData() : void
+    public function seedRolePermissions(Role $role, array $rolePermisssions)
     {
-        $this->data = require_once \database_path('data/permissions_roles.php');
-    }
-
-    private function seedsRoles() : void
-    {
-        Role::create(['name' => 'super-admin', 'guard_name' => 'admin']);
-
-        foreach ($this->data as $roleName => $perms) {
-            $role = Role::create(['name' => $roleName, 'guard_name' => 'admin']);
-            $this->seedRolePermissions($role, $perms);
+        foreach($rolePermisssions as $item) {
+            Permission::findOrCreate($item, 'admin');
         }
-    }
-
-    private function seedRolePermissions(Role $role, array $modelPermissions) : void
-    {
-        foreach ($modelPermissions as $model => $perms) {
-            $buildedPerms = collect($perms)
-                ->crossJoin($model)
-                ->map(function ($item) use ($role){
-                    $perm = implode('-', $item);
-                    Permission::findOrCreate($perm, 'admin');
-
-                    return $perm;
-                })->toArray();
-
-                $role->givePermissionTo($buildedPerms);
-        }
+        $role->givePermissionTo($rolePermisssions);
     }
 }

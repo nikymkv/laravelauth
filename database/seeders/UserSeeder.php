@@ -21,12 +21,13 @@ class UserSeeder extends Seeder
             'password' => \Hash::make('0000') , // password
             'remember_token' => \Str::random(10),
         ]);
-        
-        $user->assignRole('user');
 
-        $users = \App\Models\User::factory()->count(5)->create();
-        foreach ($users as $user) {
-            $user->assignRole('user');
-        }
+        $role = Role::create(['name' => 'admin']);
+
+        $permissions = Permission::pluck('id')->all();
+
+        $role->syncPermissions($permissions);
+
+        $user->assignRole([$role->id]);
     }
 }

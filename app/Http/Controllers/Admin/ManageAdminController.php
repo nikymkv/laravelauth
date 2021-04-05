@@ -7,31 +7,63 @@ use Illuminate\Http\Request;
 use App\Models\Admin;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Http\Requests\Admin\StoreAdminRequest;
+use App\Http\Requests\Admin\UpdateAdminRequest;
 
-class ManageAdminController extends ModelController
+class ManageAdminController extends Controller
 {
-    protected function getModelClass() : string
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function __construct()
     {
-        return Admin::class;
+        $this->middleware('permission:admin-list', ['only' => ['index']]);
+        $this->middleware('permission:admin-create|admin-delete|admin-edit', ['only' => ['create', 'store', 'show', 'edit']]);
     }
 
     public function index()
     {
-        $authUser = \Auth::user();
-        if ($authUser->hasRole('super-admin')) {
-            $admins = Admin::select(['id', 'name', 'email'])->get();
-        } else {
-            $super_admin = Admin::role('super-admin')->get()->first(); 
-            $admins = Admin::select(['id', 'name', 'email'])->where('id', '!=', $super_admin->id)->get();
-        }
+        $admins = Admin::with('roles')->get();
 
         return view('admin.admins.index', \compact('admins'));
     }
 
     public function show(Admin $admin)
     {
-        $roles = Role::all();
-        $permissions = Permission::all();
-        return view('admin.admins.show', \compact('admin', 'roles', 'permissions'));
+        return view('admin.admins.show', \compact('admin'));
+    }
+
+    public function create()
+    {
+        $roles = Role::where('guard_name', 'admin')->get();
+        return view('admin.admins.create', \compact('roles'));
+    }
+
+    public function store(StoreAdminRequest $request)
+    {
+        $validated = $request->validated();
+        
+        $admin = Admin::create($request->all());
+        $role = Role::find($request->input('role'));
+        $admin->assignRole($role);
+
+        return redirect()->route('admin.admins.index');
+    }
+
+    public function edit(Admin $admin)
+    {
+        $roles = Role::where('guard_name', 'admin')->get();
+        $permissions = Permission::where('guard_name', 'admin')->get();
+        return view('admin.admins.edit', \compact('admin', 'roles'));
+    }
+
+    public function update(UpdateAdminRequest $request, Admin $admin)
+    {
+        $validated = $request->validated();
+        $admin->update($request->all());
+
+        return redirect()->route('admin.admins.index');
     }
 }

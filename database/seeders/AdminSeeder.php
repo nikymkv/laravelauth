@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Admin;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AdminSeeder extends Seeder
 {
@@ -14,7 +17,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        $super_admin = \App\Models\Admin::create([
+        $admin = Admin::create([
             'name' => 'Super Admin Adminych',
             'email' => 'super_admin@mail.ru',
             'email_verified_at' => now(),
@@ -22,11 +25,18 @@ class AdminSeeder extends Seeder
             'remember_token' => \Str::random(10),
         ]);
 
-        $super_admin->assignRole('super-admin');
+        $role = Role::where('name', 'admin')->get()->first();
 
-        $admins = \App\Models\Admin::factory()->count(5)->create();
-        foreach ($admins as $admin) {
-            $admin->assignRole('admin');
+        $permissions = Permission::pluck('id')->all();
+
+        $role->syncPermissions($permissions);
+
+        $admin->assignRole([$role->id]);
+
+        $admins = Admin::factory()->count(5)->create();
+
+        foreach($admins as $admin) {
+            $admin->assignRole('subadmin');
         }
     }
 }

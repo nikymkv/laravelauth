@@ -5,20 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
-class PostController extends ModelController
+class PostController extends Controller
 {
-    protected $guardedMethods = [
-        'export' => 'export',
-        'import' => 'import',
-    ];
-
-    protected $methodsWithoutModels = ['import'];
-
-    protected function getModelClass() : string
-    {
-        return Post::class;
-    }
-
     /**
      * Display a listing of the resource.
      *

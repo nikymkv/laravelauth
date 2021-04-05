@@ -45,18 +45,18 @@ Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')
         //Reset Password Routes
         Route::get('/password/reset/{token}', [\App\Http\Controllers\Admin\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('/password/reset', [\App\Http\Controllers\Admin\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
-
-        // Route::post('posts/import', [PostController::class, 'import'])->name('posts.import');
-        // Route::get('posts/{post}/export', [PostController::class, 'export'])->name('posts.export');
     });
 
     Route::middleware(['assign.guard:admin'])->group(function () {
-        Route::get('/dashboard', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
-
         /**
-         * Users routes
+         * Admins routes
          */
-        Route::get('/admins', [\App\Http\Controllers\Admin\ManageAdminController::class, 'index'])->name('admins');
+        Route::get('/admins', [\App\Http\Controllers\Admin\ManageAdminController::class, 'index'])->name('admins.index');
+        Route::get('/admins/create', [\App\Http\Controllers\Admin\ManageAdminController::class, 'create'])->name('admins.create');
+        Route::post('/admins', [\App\Http\Controllers\Admin\ManageAdminController::class, 'store'])->name('admins.store');
         Route::get('/admins/{admin}', [\App\Http\Controllers\Admin\ManageAdminController::class, 'show'])->name('admins.show');
+        Route::get('/admins/{admin}/edit', [\App\Http\Controllers\Admin\ManageAdminController::class, 'edit'])->name('admins.edit');
+        Route::put('/admins/{admin}', [\App\Http\Controllers\Admin\ManageAdminController::class, 'update'])->name('admins.update');
+        Route::delete('/admins/{admin}', [\App\Http\Controllers\Admin\ManageAdminController::class, 'destroy'])->name('admins.destroy');
     });
 });

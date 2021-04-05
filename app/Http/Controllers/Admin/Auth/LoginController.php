@@ -12,7 +12,7 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '.admins.index';
     protected $guard = 'admin';
 
     public function __construct()
@@ -49,7 +49,7 @@ class LoginController extends Controller
                     $request->filled('remember')
                 )) {
             return redirect()
-                ->intended(route('admin.home'))
+                ->intended(route('admin' . $this->redirectTo))
                 ->with('status', 'You are logged in as Admin!');
         }
 
