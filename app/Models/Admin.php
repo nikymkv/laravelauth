@@ -42,20 +42,4 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public static function boot()
-    {
-        parent::boot();
-        
-        self::creating(function ($model) {
-            $model->password = \Hash::make($model->password);
-        });
-
-        self::updating(function($model){
-            if (!empty(trim($model->password))) {
-                $model->password = \Hash::make($model->password);
-            }
-            dd($model);
-        });
-    }
 }

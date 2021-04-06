@@ -56,12 +56,14 @@ class ManageAdminController extends Controller
     {
         $roles = Role::where('guard_name', 'admin')->get();
         $permissions = Permission::where('guard_name', 'admin')->get();
+
         return view('admin.admins.edit', \compact('admin', 'roles'));
     }
 
     public function update(UpdateAdminRequest $request, Admin $admin)
     {
         $validated = $request->validated();
+        dd($validated);
         $admin->update($request->all());
 
         return redirect()->route('admin.admins.index');

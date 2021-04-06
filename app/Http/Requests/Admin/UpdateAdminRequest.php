@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Validation\Rule;
+use App\Rules\MatchWithOldPassword;
+use App\Rules\IsRequiredPassword;
 
 class UpdateAdminRequest extends AdminRequest
 {
@@ -31,9 +33,20 @@ class UpdateAdminRequest extends AdminRequest
                 'min:5',
                 'max:191',
             ],
-            'password' => [
-                'string'
+            'old_password' => [
+                new IsRequiredPassword(),
+                new MatchWithOldPassword(),
             ],
+            'password' => [
+                new IsRequiredPassword(),
+                'string',
+                'min:5',
+                'max:32',
+                'different:old_password',
+            ],
+            'confirmed_password' => [
+                'same:password',
+            ]
         ]);
     }
 }
