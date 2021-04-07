@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Validation\Rule;
+use App\Rules\IsValidPassword;
+
 
 class StoreAdminRequest extends AdminRequest
 {
@@ -33,10 +35,16 @@ class StoreAdminRequest extends AdminRequest
             ],
             'password' => [
                 'required',
-                'string',
-                'min:4',
-                'max:191',
+                new IsValidPassword(),
+                'confirmed:password',
             ],
+            'password_confirmation' => [
+                'required',
+            ],
+            'role' => [
+                'required',
+                'numeric'
+            ]
         ]);
     }
 }

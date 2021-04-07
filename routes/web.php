@@ -58,5 +58,9 @@ Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')
         Route::get('/admins/{admin}/edit', [\App\Http\Controllers\Admin\ManageAdminController::class, 'edit'])->name('admins.edit');
         Route::put('/admins/{admin}', [\App\Http\Controllers\Admin\ManageAdminController::class, 'update'])->name('admins.update');
         Route::delete('/admins/{admin}', [\App\Http\Controllers\Admin\ManageAdminController::class, 'destroy'])->name('admins.destroy');
+
+        Route::resource('roles', RoleController::class);
+
+        Route::resource('permissions', PermissionController::class);
     });
 });

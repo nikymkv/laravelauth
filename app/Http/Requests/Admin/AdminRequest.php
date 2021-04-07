@@ -33,7 +33,9 @@ class AdminRequest extends FormRequest
         $this->merge([
             'name' => trim($this->name),
             'email' => trim($this->email),
-            'password' => trim($this->password),
+            'old_password' => isset($this->old_password) ? trim($this->old_password) : null,
+            'password' => isset($this->password) ? trim($this->password) : null,
+            'password_confirmation' => isset($this->password_confirmation) ? trim($this->password_confirmation) : null,
         ]);
     }
 

@@ -25,24 +25,9 @@ class IsValidPassword implements Rule
      * @return bool
      */
     public function passes($attribute, $value)
-    {
-        $validate = false;
-        switch($attribute) {
-            case 'old_password':
-                $validate = $this->validateOldPassword($value);
-            case 'password':
-                $validate = $this->validatePassword($value);
-            // case 'confirmed_password':
-            //     return $this->validateConfirmedPassword($value);
-            default:
-                $validate = false;
-        }
-        if ( ! $validate) {
-            return false;
-        }
-        if ( ! $this->baseValidate($value)) {
-            return false;
-        }
+    {   
+        // return $this->baseValidate($value);
+        return true;
     }
 
     /**
@@ -52,58 +37,13 @@ class IsValidPassword implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Wrong password format.';
     }
 
-    protected function baseValidate(string $value)
+    protected function baseValidate($value) : bool
     {
-        $lengthPass = (\Str::length($value) >= 8);
         $isValid = ((bool) preg_match('/^\S*(?=\S{8,25})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$/', $value));
         
-        return ($lengthPass && $isValid);
-    }
-
-    protected function validateOldPassword(string $value) : bool
-    {
-        $old_password = (null !== request()->input('old_password'));
-        $password = (null !== request()->input('password'));
-        $confirmed_password = (null !== request()->input('confirmed_password'));
-
-        if ( ! $old_password && ! $password && ! $confirmed_password) {
-            return true;
-        }
-
-        $admin_id = request()->input('id');
-        $admin = Admin::find($admin_id);
-        if (! \Hash::check($value, $admin->password)) {
-            return true;
-        }
-        return false;
-    }
-
-    protected function validatePassword(string $value) : bool
-    {
-        $old_password = (null !== request()->input('old_password'));
-        $password = (null !== request()->input('password'));
-        $confirmed_password = (null !== request()->input('confirmed_password'));
-
-        if ( ! $old_password && ! $password && ! $confirmed_password) {
-            return true;
-        }
-
-        if ($old_password === $password) {
-            return false;
-        }
-
-        if ($password !== $confirmed_password) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function checkFilled() : bool
-    {
-        return 0;
+        return $isValid;
     }
 }

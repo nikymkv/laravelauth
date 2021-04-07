@@ -36,7 +36,6 @@ class AdminObserver
      */
     public function updating(Admin $admin)
     {
-        dd($admin);
         if ($admin->isDirty('password')) {
             $this->hashPassword($admin);
         }

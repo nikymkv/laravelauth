@@ -8,9 +8,9 @@
         <p><input type="text" name="email" value="{{ $admin->email }}"></p>
         <p><input type="password" name="old_password" placeholder="Старый пароль"></p>
         <p><input type="password" name="password" placeholder="Новый пароль"></p>
-        <p><input type="password" name="confirmed_password" placeholder="Подтверждение нового пароля"></p>
-        <p><input type="text" name="created_at" value="{{ $admin->created_at }}"></p>
-        <p><input type="text" name="updated_at" value="{{ $admin->updated_at }}"></p>
+        <p><input type="password" name="password_confirmation" placeholder="Подтверждение нового пароля"></p>
+        <p>Создан: {{ $admin->created_at }}</p>
+        <p>Последнее редактирование: {{ $admin->updated_at }}</p>
         <p>
             <select name="role">
                 @foreach ($roles as $role)

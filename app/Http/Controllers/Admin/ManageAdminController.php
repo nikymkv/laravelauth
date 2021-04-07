@@ -44,8 +44,7 @@ class ManageAdminController extends Controller
     public function store(StoreAdminRequest $request)
     {
         $validated = $request->validated();
-        
-        $admin = Admin::create($request->all());
+        $admin = Admin::create($validated);
         $role = Role::find($request->input('role'));
         $admin->assignRole($role);
 
@@ -63,8 +62,7 @@ class ManageAdminController extends Controller
     public function update(UpdateAdminRequest $request, Admin $admin)
     {
         $validated = $request->validated();
-        dd($validated);
-        $admin->update($request->all());
+        $admin->update($validated);
 
         return redirect()->route('admin.admins.index');
     }

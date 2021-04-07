@@ -5,6 +5,7 @@
         <p><input type="text" name="name" placeholder="Имя"></p>
         <p><input type="text" name="email" placeholder="Почта"></p>
         <p><input type="password" name="password" placeholder="Пароль"></p>
+        <p><input type="password" name="password_confirmation" placeholder="Подтвреждение пароля"></p>
         <p>
             <select name="role">
                 @foreach ($roles as $role)
