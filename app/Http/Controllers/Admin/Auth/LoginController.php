@@ -42,17 +42,17 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+
         $this->validator($request);
 
-        if (Auth::guard('admin')->attempt(
+        if ($this->guard()->attempt(
                     $request->only('email', 'password'),
                     $request->filled('remember')
                 )) {
-            return redirect()
-                ->intended(route('admin' . $this->redirectTo))
-                ->with('status', 'You are logged in as Admin!');
-        }
 
+            return redirect()
+                ->intended(route('admin' . $this->redirectTo));
+        }
 
         return $this->loginFailed();
     }

@@ -25,7 +25,7 @@ class AdminFactory extends Factory
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
-            'password' => \Hash::make('0000'), 
+            'password' => '0000',
             'remember_token' => \Str::random(10),
         ];
     }

@@ -62,5 +62,8 @@ Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')
         Route::resource('roles', RoleController::class);
 
         Route::resource('permissions', PermissionController::class);
+
+        Route::get('storage/profile/photo/{admin}', FileController::class . '@getProfileImage')->name('admins.photo_profile');
+        Route::post('storage/profile/photo', FileController::class . '@storeProfileImage')->name('admins.photo_profile.store');
     });
 });

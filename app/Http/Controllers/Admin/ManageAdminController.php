@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
+use Storage;
 
 class ManageAdminController extends Controller
 {
@@ -45,6 +46,17 @@ class ManageAdminController extends Controller
     {
         $validated = $request->validated();
         $admin = Admin::create($validated);
+
+        $photoPath = $request->session()->pull('profile_photo_path', null);
+        $photoHash = $request->session()->pull('profile_photo_hash', null);
+
+        if (isset($photoPath) && isset($photoHash)) {
+            $admin->photo()->create([
+                'path' => $photoPath,
+                'hash' => $photoHash,
+            ]);
+        }
+
         $role = Role::find($request->input('role'));
         $admin->assignRole($role);
 

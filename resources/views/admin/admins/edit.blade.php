@@ -20,6 +20,9 @@
         </p>
         <p><input type="submit" value="Сохранить"></p>
     </form>
+    @if (isset($admin->photo->path))
+        <img src="{{ route('admin.admins.photo_profile', ['admin' => $admin]) }}" width="200" alt="" srcset="">        
+    @endif
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
