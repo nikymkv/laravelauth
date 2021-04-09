@@ -4,38 +4,40 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\AdminPhotoProfile;
+use App\Services\Admin\HandleImage;
 use Storage;
 
 class FileController extends Controller
 {
-    public function storeProfileImage(Request $request, Admin $admin)
+    public function storeImage(Request $request, Admin $admin, HandleImage $handleImage)
     {
-        if ($request->hasFile('profile_photo')) {
-            $photo = $request->file('profile_photo');
-            $filename = time() . $photo->getClientOriginalName();
-            $pathPhoto = Storage::disk('admin')->putFileAs('photoProfile', $photo, $filename);
-            $hashPhoto = md5_file(\storage_path('app/admin/' . $pathPhoto));
+        if ($request->hasFile('images')) {
 
-            $request->session()->put('profile_photo_path', $pathPhoto);
-            $request->session()->put('profile_photo_hash', $hashPhoto);
+            $images = $request->file('images');
+            $handleImage->storeImages(
+                is_array($images)
+                ? $images
+                : [$images]
+            );
 
             $response = [
-                'success' => 1
+                'success' => 1,
+                'msg' => 'Files were saved',
             ];
         } else {
             $response = [
-                'success' => 0
+                'success' => 0,
+                'error_msg' => 'Files array are empty!',
             ];
         }
 
-        return \response()->json($response);
-
-
+        return response()->json($response);
     }
 
-    public function getProfileImage(Admin $admin)
+    public function getProfileImage(AdminPhotoProfile $photo)
     {
-        $path = isset($admin->photo->path) ? $admin->photo->path : null;
+        $path = isset($photo) ? $photo->path : null;
         if ( ! Storage::disk('admin')->exists($path)) {
             abort('404');
         }

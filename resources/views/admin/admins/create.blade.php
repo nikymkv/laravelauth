@@ -15,7 +15,8 @@
         </p>
         <p><input type="submit" value="Сохранить"></p>
     </form>
-    <p><input type="file" name="profile_photo" id="upload_photo" placeholder="Фото профиля"></p>
+    <p><input type="file" name="images[]" id="upload_photo" placeholder="Фото профиля"></p>
+    
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -30,7 +31,9 @@
         console.log(fileInput)
         fileInput.onchange = function () {
             let formData = new FormData()
-            formData.append('profile_photo', fileInput.files[0])
+            for(let i = 0; i < fileInput.files.length; i++) {
+                formData.append('images[]', fileInput.files[i])
+            }
             axios.post('http://laravelauth/admin/storage/profile/photo', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

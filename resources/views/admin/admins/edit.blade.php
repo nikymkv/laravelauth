@@ -20,8 +20,11 @@
         </p>
         <p><input type="submit" value="Сохранить"></p>
     </form>
-    @if (isset($admin->photo->path))
-        <img src="{{ route('admin.admins.photo_profile', ['admin' => $admin]) }}" width="200" alt="" srcset="">        
+    <p><input type="file" name="images[]" id="upload_photo" placeholder="Фото профиля" multiple></p>
+    @if (isset($admin->photos))
+        @foreach ($admin->photos as $photo)
+            <img src="{{ route('admin.admins.photo_profile', ['photo' => $photo]) }}" width="200" alt="" srcset="">
+        @endforeach
     @endif
     @if ($errors->any())
     <div class="alert alert-danger">
@@ -32,4 +35,25 @@
         </ul>
     </div>
 @endif
+<script>
+    let fileInput = document.getElementById('upload_photo')
+    console.log(fileInput)
+    fileInput.onchange = function () {
+        let formData = new FormData()
+        for(let i = 0; i < fileInput.files.length; i++) {
+            formData.append('images[]', fileInput.files[i])
+        }
+        axios.post('http://laravelauth/admin/storage/profile/photo', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(function (data) {
+            console.log('success', data)
+        })
+        .catch(function (data) {
+            console.log('success', data)
+        })
+    }
+</script>
 @endsection

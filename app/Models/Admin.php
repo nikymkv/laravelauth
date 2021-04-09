@@ -43,8 +43,27 @@ class Admin extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function photo()
+    public function photos()
     {
-        return $this->hasOne(AdminPhotoProfile::class);
+        return $this->hasMany(AdminPhotoProfile::class);
+    }
+
+    public function storeImage()
+    {
+        $imagesInfo = $this->getInfoImageFromSession();
+
+        if ($imagesInfo) {
+            foreach ($imagesInfo as $imageInfo) {
+                $this->photos()->create([
+                    'path' => $imageInfo['path'],
+                    'hash' => $imageInfo['hash'],
+                ]);
+            }
+        }
+    }
+
+    protected function getInfoImageFromSession() : array
+    {
+        return request()->session()->pull('images_info', []); 
     }
 }

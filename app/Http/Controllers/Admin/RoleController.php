@@ -42,9 +42,8 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        $validated = $request->validated();
-        $role = Role::create(['name' => $validated['name']]);
-        $role->syncPermissions($validated['permissions']);
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request('permissions'));
 
         return redirect()->route('admin.roles.index');
     }
@@ -97,10 +96,9 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        $validated = $request->validated();
-        $role->update(['name' => $validated['name']]);
+        $role->update(['name' => $request->input('name')]);
         $role->save();
-        $role->syncPermissions($validated['permissions']);
+        $role->syncPermissions($request->input('permissions'));
 
         return redirect()->route('admin.roles.index');
     }

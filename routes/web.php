@@ -63,7 +63,7 @@ Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')
 
         Route::resource('permissions', PermissionController::class);
 
-        Route::get('storage/profile/photo/{admin}', FileController::class . '@getProfileImage')->name('admins.photo_profile');
-        Route::post('storage/profile/photo', FileController::class . '@storeProfileImage')->name('admins.photo_profile.store');
+        Route::get('storage/profile/photo/{photo}', FileController::class . '@getProfileImage')->name('admins.photo_profile');
+        Route::post('storage/profile/photo', FileController::class . '@storeImage')->name('admins.photo_profile.store');
     });
 });

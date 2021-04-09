@@ -11,8 +11,10 @@
             <input type="checkbox" name="permissions" value="{{ $perm->id }}" > {{ $perm->name }}
         @endforeach
     </p>
-    @if (isset($admin->photo->path))
-        <img src="{{ route('admin.admins.photo_profile', ['admin' => $admin]) }}" width="200" alt="" srcset="">        
+    @if (isset($admin->photos))
+        @foreach ($admin->photos as $photo)
+            <img src="{{ route('admin.admins.photo_profile', ['photo' => $photo]) }}" width="200" alt="" srcset="">
+        @endforeach
     @endif
     <p><a href="{{ route('admin.admins.edit', ['admin' => $admin]) }}">Изменить</a></p>
 @endsection

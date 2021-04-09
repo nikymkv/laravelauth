@@ -42,7 +42,7 @@ class PermissionController extends Controller
     public function store(StorePermissionRequest $request)
     {
         $validated = $request->validated();
-        Permission::create(['name' => $validated['name']]);
+        Permission::create(['name' => $request->input('name')]);
         
         return redirect()->route('admin.permissions.index');
     }
@@ -78,8 +78,7 @@ class PermissionController extends Controller
      */
     public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        $validated = $request->validated();
-        $permission->update(['name' => $validated['name']]);
+        $permission->update(['name' => $request->input('name')]);
 
         return redirect()->route('admin.permissions.index');
     }
