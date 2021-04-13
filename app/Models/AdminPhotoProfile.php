@@ -10,9 +10,20 @@ class AdminPhotoProfile extends Model
     public $timestamps = FALSE;
 
     protected $fillable = [
-        'admin_id',
         'path',
         'hash',
-        'deleted'
     ];
+
+    public static function storeAndAttach(array $imagesInfo, int $adminId)
+    {
+        AdminPhotoProfile::insert($imagesInfo);
+        $imagesId = AdminPhotoProfile::whereIn(
+                                'path', array_column($imagesInfo, 'path')
+                            )
+                            ->pluck('id')
+                            ->toArray();
+
+        $admin = Admin::find($adminId);
+        $admin->photos()->attach($imagesId);
+    } 
 }

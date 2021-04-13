@@ -45,25 +45,12 @@ class Admin extends Authenticatable
 
     public function photos()
     {
-        return $this->hasMany(AdminPhotoProfile::class);
+        return $this->belongsToMany(AdminPhotoProfile::class, 'admin_has_photos', 'admin_id', 'admin_photo_id');
     }
 
-    public function storeImage()
+    public function updateWithRole(array $data, $role)
     {
-        $imagesInfo = $this->getInfoImageFromSession();
-
-        if ($imagesInfo) {
-            foreach ($imagesInfo as $imageInfo) {
-                $this->photos()->create([
-                    'path' => $imageInfo['path'],
-                    'hash' => $imageInfo['hash'],
-                ]);
-            }
-        }
-    }
-
-    protected function getInfoImageFromSession() : array
-    {
-        return request()->session()->pull('images_info', []); 
+        $this->update($data);
+        $this->syncRoles($role);
     }
 }

@@ -3,7 +3,7 @@
     <form action="{{ route('admin.admins.update', ['admin' => $admin]) }}" method="POST">
         @csrf
         @method('PUT')
-        <p><input type="text" name="id" value="{{ $admin->id }}" readonly></p>
+        <p><input type="text" name="id" id="admin_id" value="{{ $admin->id }}" readonly></p>
         <p><input type="text" name="name" value="{{ $admin->name }}"></p>
         <p><input type="text" name="email" value="{{ $admin->email }}"></p>
         <p><input type="password" name="old_password" placeholder="Старый пароль"></p>
@@ -26,6 +26,14 @@
             <img src="{{ route('admin.admins.photo_profile', ['photo' => $photo]) }}" width="200" alt="" srcset="">
         @endforeach
     @endif
+
+        @if (isset($admin->photos))
+            @foreach ($admin->photos as $photo)
+                <input type="checkbox" name="removePhotos[]" value="{{ $photo->id }}" id="remove_photo">Image
+            @endforeach
+            <button type="submit" id="remove_button">Удалить</button>
+        @endif
+        
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -37,12 +45,13 @@
 @endif
 <script>
     let fileInput = document.getElementById('upload_photo')
-    console.log(fileInput)
     fileInput.onchange = function () {
         let formData = new FormData()
         for(let i = 0; i < fileInput.files.length; i++) {
             formData.append('images[]', fileInput.files[i])
         }
+        let adminId = document.getElementById('admin_id').value
+        formData.append('admin_id', adminId)
         axios.post('http://laravelauth/admin/storage/profile/photo', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -55,5 +64,32 @@
             console.log('success', data)
         })
     }
+
+    let removeButton = document.getElementById('remove_button')
+    console.log(removeButton)
+    removeButton.onclick = function () {
+        let formData = new FormData()
+        let adminId = document.getElementById('admin_id').value
+        let removeImages = document.getElementsByName('removePhotos[]')
+        for(let i = 0; i < removeImages.length; i++) {
+            if (removeImages[i].checked) {
+                formData.append('removeImages[]', removeImages[i].value)
+            }
+        }
+        formData.append('_method', 'DELETE')
+        formData.append('admin_id', adminId)
+        axios.post('http://laravelauth/admin/storage/profile/photo', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(function (data) {
+            console.log('success', data)
+        })
+        .catch(function (data) {
+            console.log('success', data)
+        })
+    }
+
 </script>
 @endsection

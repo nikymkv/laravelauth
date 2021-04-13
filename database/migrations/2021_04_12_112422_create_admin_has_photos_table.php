@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdminPhotoProfilesTable extends Migration
+class CreateAdminHasPhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateAdminPhotoProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('admin_photo_profiles', function (Blueprint $table) {
-            $table->id();
-            $table->string('path');
-            $table->string('hash');
+        Schema::create('admin_has_photos', function (Blueprint $table) {
+            $table->foreignId('admin_id')->constrained('admins');
+            $table->foreignId('admin_photo_id')->constrained('admin_photo_profiles')->onDelete('cascade');
+
+            $table->unique(['admin_id', 'admin_photo_id']);
 
             $table->engine = 'InnoDB';
         });
@@ -29,6 +30,6 @@ class CreateAdminPhotoProfilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin_photo_profiles');
+        Schema::dropIfExists('admin_has_photos');
     }
 }

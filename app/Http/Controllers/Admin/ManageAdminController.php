@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin;
-use App\Models\DeleteFile;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use Storage;
-use App\Services\ImageService;
 
 class ManageAdminController extends Controller
 {
@@ -49,9 +47,7 @@ class ManageAdminController extends Controller
 
     public function store(StoreAdminRequest $request)
     {
-        $admin = Admin::create($request->all());
-        $admin->storeImage(); // запись путей и хешей изображений (сохранились в сессии, после их загрузки AJAXом) в бд
-
+        $admin = Admin::create($request->validated());
         $role = Role::find($request->input('role'));
         $admin->assignRole($role);
 
@@ -68,8 +64,8 @@ class ManageAdminController extends Controller
 
     public function update(UpdateAdminRequest $request, Admin $admin)
     {
-        $admin->update($request->all());
-        $admin->storeImage(); // запись путей и хешей изображений (сохранились в сессии, после их загрузки AJAXом) в бд
+        $role = Role::find($request->input('role'));
+        $admin->updateWithRole($request->validated(), $role);
 
         return redirect()->route('admin.admins.index');
     }

@@ -64,6 +64,7 @@ Route::prefix('/admin')->name('admin.')->namespace('App\Http\Controllers\Admin')
         Route::resource('permissions', PermissionController::class);
 
         Route::get('storage/profile/photo/{photo}', FileController::class . '@getProfileImage')->name('admins.photo_profile');
-        Route::post('storage/profile/photo', FileController::class . '@storeImage')->name('admins.photo_profile.store');
+        Route::post('storage/profile/photo', FileController::class . '@storeImages')->name('admins.photo_profile.store');
+        Route::delete('storage/profile/photo', FileController::class . '@removeImages')->name('admins.photo_profile.remove');
     });
 });
